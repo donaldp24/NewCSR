@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:title="@string/display_settings"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:settings="http://schemas.android.com/apk/res/com.general.mediaplayer.csr">
+    <com.general.mediaplayer.csr.BrightnessPreference android:title="@string/brightness" android:key="brightness" android:dialogTitle="@string/brightness" />
+    <PreferenceScreen android:title="@string/wallpaper_settings_title" android:key="wallpaper" android:fragment="com.general.mediaplayer.csr.WallpaperTypeSettings" />
+    <CheckBoxPreference android:title="@string/accelerometer_title" android:key="accelerometer" />
+    <ListPreference android:persistent="false" android:entries="@array/screen_timeout_entries" android:title="@string/screen_timeout" android:key="screen_timeout" android:summary="@string/screen_timeout_summary" android:entryValues="@array/screen_timeout_values" />
+    <ListPreference android:entries="@array/entries_font_size" android:title="@string/title_font_size" android:key="font_size" android:summary="@string/summary_font_size" android:dialogTitle="@string/dialog_title_font_size" android:entryValues="@array/entryvalues_font_size" />
+    <CheckBoxPreference android:persistent="false" android:title="@string/notification_pulse_title" android:key="notification_pulse" />
+    <ListPreference android:persistent="false" android:entries="@array/accelerometer_entries" android:title="@string/accelerometer_coordinate_title" android:key="accelerometer_coornadite" android:entryValues="@array/accelerometer_values" />
+    <PreferenceScreen android:title="@string/screen_adaption_setting" android:key="screen_adaption" android:summary="@string/screen_adaption_summary">
+        <intent android:targetPackage="com.general.mediaplayer.csr" android:action="android.intent.action.MAIN" android:targetClass="com.general.mediaplayer.csr.ScreenAdaption" />
+    </PreferenceScreen>
+    <Preference android:title="@string/tscalibration_title" android:key="tscalibration">
+        <intent android:targetPackage="org.zeroxlab.util.tscal" android:targetClass="org.zeroxlab.util.tscal.TSCalibration" />
+    </Preference>
+    <CheckBoxPreference android:title="@string/smart_brightness_title" android:key="smart_brightness" android:summary="@string/smart_brightness_summary" android:defaultValue="false" />
+    <ListPreference android:entries="@array/hdmi_mode_entries" android:title="@string/hdmi_output_mode" android:key="hdmi_output_mode" android:summary="@string/hdmi_output_mode_summary" android:entryValues="@array/hdmi_mode_values" />
+</PreferenceScreen>

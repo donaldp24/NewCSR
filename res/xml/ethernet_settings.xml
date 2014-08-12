@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:title="@string/eth_settings"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference android:title="@string/eth_toggle_title" android:key="eth_toggle" />
+    <PreferenceCategory android:title="@string/eth_devices" android:key="eth_device_title" />
+    <PreferenceCategory android:title="@string/eth_conf" />
+    <Preference android:title="@string/eth_mac_address" android:key="mac_address" android:summary="@string/eth_mac_string" style="?android:attr/preferenceInformationStyle" />
+    <Preference android:title="@string/eth_ip_address" android:key="current_ip_address" android:summary="@string/eth_ip_string" style="?android:attr/preferenceInformationStyle" />
+    <Preference android:persistent="false" android:title="@string/eth_advanced_configure" android:key="eth_configure" />
+</PreferenceScreen>

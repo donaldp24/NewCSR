@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:title="@string/pppoe_setting_device" android:key="devices" />
+    <EditTextPreference android:title="@string/pppoe_setting_user" android:key="username" />
+    <EditTextPreference android:password="true" android:title="@string/pppoe_setting_password" android:key="password" />
+    <CheckBoxPreference android:title="@string/pppoe_setting_auto_connect" android:key="auto_connecting" />
+    <CheckBoxPreference android:title="@string/pppoe_setting_toggle" android:key="toggle" />
+</PreferenceScreen>
