@@ -24,7 +24,8 @@ public class Hidusb
   {
     try
     {
-      System.loadLibrary("hid_raws");
+        // have to uncomment
+      //System.loadLibrary("hid_raws");
       mData = new int[0];
     }
     catch (UnsatisfiedLinkError localUnsatisfiedLinkError)
@@ -40,13 +41,16 @@ public class Hidusb
   public Hidusb()
     throws Exception
   {
+      /* have to uncomment
     if ((mLibLoadFlag) && (openhidraws() == -1))
       throw new Exception("It's not found device!");
+      */
   }
 
   public static Hidusb newInstance()
     throws Exception
   {
+
     if (mHidusb == null)
       mHidusb = new Hidusb();
     return mHidusb;

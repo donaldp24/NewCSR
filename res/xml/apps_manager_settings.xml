@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference android:title="@string/auto_app_title" android:key="auto_app" android:fragment="com.general.mediaplayer.csr.AppsAutoRunFragement" />
-    <Preference android:title="@string/uninstall_app_title" android:key="uninstall_apps" android:fragment="com.general.mediaplayer.csr.AppsUninstallFragement" />
-    <Preference android:title="@string/install_app_title" android:key="install_apps" android:fragment="com.general.mediaplayer.csr.AppsInstallFragement" />
+
+    <Preference android:title="@string/auto_app_title"
+                android:key="auto_app"
+                android:fragment="com.general.mediaplayer.csr.AppsAutoRunFragement" />
+
+    <Preference android:title="@string/uninstall_app_title"
+                android:key="uninstall_apps"
+                android:fragment="com.general.mediaplayer.csr.AppsUninstallFragement" />
+
+    <Preference android:title="@string/install_app_title"
+                android:key="install_apps"
+                android:fragment="com.general.mediaplayer.csr.AppsInstallFragement" />
+
 </PreferenceScreen>

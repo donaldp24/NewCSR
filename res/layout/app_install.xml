@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView android:textSize="30.0sp"
+              android:textColor="@android:color/holo_blue_light"
+              android:gravity="center_horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="0.0dip"
+              android:text="@string/install_app_title"
+              android:layout_weight="3.0" />
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="58.0dip">
+
+        <TextView android:textSize="16.0sp"
+                  android:layout_gravity="center_vertical"
+                  android:id="@id/app_install_files_path"
+                  android:layout_width="0.0dip"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="2.0" />
+
+        <Button android:id="@id/app_install_extern_sd_btn"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:text="@string/switch_sd_btn_title"
+                android:layout_weight="1.0" />
+
+        <Button android:id="@id/app_install_usb_btn"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:text="@string/switch_usb_btn_title"
+                android:layout_weight="1.0" />
+    </LinearLayout>
+
+    <ListView android:layout_gravity="center_vertical"
+              android:id="@id/app_install_file_listview"
+              android:layout_width="fill_parent"
+              android:layout_height="0.0dip"
+              android:layout_weight="24.0" />
+
+    <Button android:id="@id/app_install_exit_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:text="@string/app_install_exit_btn_title"
+            android:layout_weight="4.75" />
+</LinearLayout>

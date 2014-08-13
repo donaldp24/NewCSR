@@ -25,7 +25,7 @@ public class wdg
   public wdg()
     throws Exception
   {
-    if ((mLibLoadFlag) && (openwdog() == -1))
+    if ((mLibLoadFlag) && (openwdog() == WDG_FAIL))
       throw new Exception("It's not found watchdog device!");
   }
 
