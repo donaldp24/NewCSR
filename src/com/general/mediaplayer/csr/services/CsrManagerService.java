@@ -304,11 +304,11 @@ public class CsrManagerService extends Service {
    private void set24HourReset() {
       Log.v("ResetTime", "=============set24HourReset====");
       this.get24HourResetInfo();
-      Calendar var2 = Calendar.getInstance();
-      var2.setTimeInMillis(System.currentTimeMillis());
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTimeInMillis(System.currentTimeMillis());
       if(this.mIsEnableReset) {
-         this.mAlarmHelper.openAlarm(0, var2.getTimeInMillis() + this.mFristStartTimeMs, 86400000L);
-         this.save24HourResetInMillis(Long.valueOf(var2.getTimeInMillis() + this.mFristStartTimeMs));
+         this.mAlarmHelper.openAlarm(0, calendar.getTimeInMillis() + this.mFristStartTimeMs, 86400000L);
+         this.save24HourResetInMillis(Long.valueOf(calendar.getTimeInMillis() + this.mFristStartTimeMs));
       } else {
          this.mAlarmHelper.closeAlarm(0);
       }
@@ -333,9 +333,8 @@ public class CsrManagerService extends Service {
 
    private void testSuperManagerMode() {
       if(this.mPowerOnFirst) {
-         int var5 = 1 + this.mPowerOnFirstCnt;
-         this.mPowerOnFirstCnt = var5;
-         if(var5 >= 40) {
+         this.mPowerOnFirstCnt = this.mPowerOnFirstCnt + 1;
+         if(this.mPowerOnFirstCnt >= 40) {
             Log.v(TAG, "mPowerOnFirstCnt=" + this.mPowerOnFirstCnt);
             this.mPowerOnFirstCnt = 0;
             this.mPowerOnFirst = false;
@@ -413,10 +412,12 @@ public class CsrManagerService extends Service {
       return var3;
    }
 
-   public IBinder onBind(Intent var1) {
+    @Override
+   public IBinder onBind(Intent intent) {
       return null;
    }
 
+    @Override
    public void onCreate() {
       super.onCreate();
       Log.v(TAG, "===onCreate==");
@@ -430,20 +431,21 @@ public class CsrManagerService extends Service {
 
       this.mContext = this.getApplicationContext();
       this.mAlarmHelper = new AlarmHelper(this.mContext);
-      IntentFilter var4 = new IntentFilter();
-      var4.addAction(RESET_24HOUR_ACTION);
-      var4.addAction(RECEIVER_APP_RUN_ACTION);
-      var4.addAction(SYS_CSR_RESTART_ACTION);
-      this.registerReceiver(this.m24HourResetReceiver, var4);
+      IntentFilter intentFilter = new IntentFilter();
+      intentFilter.addAction(RESET_24HOUR_ACTION);
+      intentFilter.addAction(RECEIVER_APP_RUN_ACTION);
+      intentFilter.addAction(SYS_CSR_RESTART_ACTION);
+      this.registerReceiver(this.m24HourResetReceiver, intentFilter);
       this.mHandler.postDelayed(this.mTimerRunable, 500L);
-      Intent var7 = new Intent();
-      var7.setAction(RESET_24HOUR_ACTION);
-      this.sendBroadcast(var7);
+      Intent sendIntent = new Intent();
+      sendIntent.setAction(RESET_24HOUR_ACTION);
+      this.sendBroadcast(sendIntent);
       this.mAppRunTimeoutCntMax = APP_RUN_TIMEOUT_MAX;
       this.mPowerOnFirst = true;
       this.mPowerOnFirstCnt = 0;
    }
 
+    @Override
    public void onDestroy() {
       this.unregisterReceiver(this.m24HourResetReceiver);
       Log.v(TAG, "===onDestroy==");
@@ -451,20 +453,20 @@ public class CsrManagerService extends Service {
       super.onDestroy();
    }
 
-   public void startRunCsr(Context context, Intent var2) {
-      Intent var3 = new Intent(context, Settings.class);
-      var3.addFlags(268435456);
-      context.startActivity(var3);
+   public void startRunCsr(Context context, Intent intent) {
+      Intent newTaskIntent = new Intent(context, Settings.class);
+      newTaskIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(newTaskIntent);
    }
 
-   public void startRunCsrThread(final Context var1, final Intent var2) {
+   public void startRunCsrThread(final Context context, final Intent intent) {
       Log.v(TAG, "startRunCsrThread Start");
       this.mQuitRunCsrThread = false;
       this.mQuitRunCsrCnt = 0;
       (new Thread() {
          public void run() {
             while(!CsrManagerService.this.mQuitRunCsrThread) {
-               if(!CsrManagerService.this.getRunningProcess(var1, var2)) {
+               if(!CsrManagerService.this.getRunningProcess(context, intent)) {
                   CsrManagerService.this.mQuitRunCsrThread = true;
                } else {
                   try {
@@ -482,7 +484,7 @@ public class CsrManagerService extends Service {
             }
 
             Log.v(TAG, "startRunCsrThread end");
-            CsrManagerService.this.startRunCsr(var1, var2);
+            CsrManagerService.this.startRunCsr(context, intent);
          }
       }).start();
    }
