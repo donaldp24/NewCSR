@@ -878,7 +878,7 @@ public class Settings extends PreferenceActivity
     @Override
     public void onBackPressed()
     {
-        //super.onBackPressed();
+        super.onBackPressed();
         Log.v("Csr", "===csr settings ==onBackPressed");
         getFragmentManager().popBackStackImmediate();
     }

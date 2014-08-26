@@ -153,7 +153,8 @@ public class MediaPlayerBroadcastReceiver extends BroadcastReceiver {
       Log.v(" ", "========onBootCompleted=====strPackageName=" + var3);
       if(!this.checkSuperManagerKey()) {
          if(var3 != null) {
-             String str = new StringBuilder().append(var3).append(".ScanMediaActivity").toString();
+             //String str = new StringBuilder().append(var3).append(".ScanMediaActivity").toString();
+             String str = var3;
              openApp(paramContext, str);
          } else {
             Intent var5 = new Intent(paramContext, Settings.class);
