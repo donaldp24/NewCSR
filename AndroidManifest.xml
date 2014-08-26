@@ -128,5 +128,13 @@
             <meta-data android:name="com.general.mediaplayer.csr.PARENT_FRAGMENT_CLASS" android:value="com.general.mediaplayer.csr.Settings$WifiSettingsActivity" />
         </activity>
 
+
+        <receiver android:name=".MediaPlayerBroadcastReceiver">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.android.intent.CSR" />
+            </intent-filter>
+        </receiver>
+
 	</application>
 </manifest>

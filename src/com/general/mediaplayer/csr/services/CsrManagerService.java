@@ -51,7 +51,7 @@ public class CsrManagerService extends Service {
             if(intent.getAction().equalsIgnoreCase(RECEIVER_APP_RUN_ACTION)) {
                CsrManagerService.this.mAppRunTimeoutCnt = 0;
                if(intent.getBooleanExtra("Csr_app_run", false)) {
-                  CsrManagerService.this.mAppRunTimeoutCntMax = APP_RUN_TIMEOUT_MAX * SUPER_MANAGER_KEY_SURE_CNT;
+                  CsrManagerService.this.mAppRunTimeoutCntMax = 480;
                   return;
                }
 
@@ -233,9 +233,8 @@ public class CsrManagerService extends Service {
    private void onTimer() {
       this.testSuperManagerMode();
       this.sendWatchDogSign();
-      int var1 = 1 + this.mAppRunTimeoutCnt;
-      this.mAppRunTimeoutCnt = var1;
-      if(var1 >= this.mAppRunTimeoutCntMax && !this.mSuperManagerMode) {
+      this.mAppRunTimeoutCnt++;
+      if(this.mAppRunTimeoutCnt >= this.mAppRunTimeoutCntMax && !this.mSuperManagerMode) {
          Log.v("onTimer", "============onTimer====APP_RUN_TIMEOUT_MAX====");
          this.startReboot();
       }
@@ -256,7 +255,6 @@ public class CsrManagerService extends Service {
       if(interval.longValue() > 0L) {
          editor.putLong(strAlarmSetInMillisSp, interval.longValue());
       }
-
       editor.commit();
    }
 

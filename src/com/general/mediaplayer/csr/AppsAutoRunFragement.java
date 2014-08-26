@@ -93,9 +93,9 @@ public class AppsAutoRunFragement extends DialogFragment {
          ((Settings)this.getActivity()).mRestartAppAgain = false;
          this.mAutoRunAppPackageName = ((AppInfo)this.mClientAppInfos.get(var1)).getPackageName();
          Log.v("test", "mAutoRunAppPackageName=" + this.mAutoRunAppPackageName);
-         String var3 = this.getResources().getString(R.string.mediaplayer_autorun_app_key);
-         Log.v("test", "strAutoRunAppKey=" + var3);
-         this.mEditor.putString(var3, this.mAutoRunAppPackageName);
+         String strAutorunAppKey = this.getResources().getString(R.string.mediaplayer_autorun_app_key);
+         Log.v("test", "strAutoRunAppKey=" + strAutorunAppKey);
+         this.mEditor.putString(strAutorunAppKey, this.mAutoRunAppPackageName);
          this.mEditor.commit();
          Log.v(this.getTag(), "====setAutoRunClientApp====mAutoRunAppPackageName=" + this.mAutoRunAppPackageName);
       }
