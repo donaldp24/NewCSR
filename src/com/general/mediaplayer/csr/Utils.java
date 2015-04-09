@@ -7,12 +7,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
-import android.net.LinkProperties;
+//import android.net.LinkProperties;
 import android.preference.Preference;
-import android.preference.PreferenceFrameLayout;
+//import android.preference.PreferenceFrameLayout;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceActivity.Header;
-import android.preference.PreferenceFrameLayout.LayoutParams;
+//import android.preference.PreferenceFrameLayout.LayoutParams;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +39,7 @@ public class Utils {
       }
    }
 
-   private static String formatIpAddresses(LinkProperties var0) {
+   /*21 private static String formatIpAddresses(LinkProperties var0) {
       String var1 = null;
       if(var0 != null) {
          Iterator var2 = var0.getAddresses().iterator();
@@ -58,7 +58,7 @@ public class Utils {
       }
 
       return var1;
-   }
+   }*/
 
    public static String getBatteryPercentage(Intent var0) {
       int var1 = var0.getIntExtra("level", 0);
@@ -89,7 +89,7 @@ public class Utils {
       }
    }
 
-   public static String getDefaultIpAddresses(Context var0) {
+   /*21 public static String getDefaultIpAddresses(Context var0) {
       return formatIpAddresses(((ConnectivityManager)var0.getSystemService("connectivity")).getActiveLinkProperties());
    }
 
@@ -123,13 +123,13 @@ public class Utils {
 
    public static String getWifiIpAddresses(Context var0) {
       return formatIpAddresses(((ConnectivityManager)var0.getSystemService("connectivity")).getLinkProperties(1));
-   }
+   }*/
 
    public static boolean isMonkeyRunning() {
       return ActivityManager.isUserAMonkey();
    }
 
-   public static boolean isVoiceCapable(Context var0) {
+   /*21 public static boolean isVoiceCapable(Context var0) {
       TelephonyManager var1 = (TelephonyManager)var0.getSystemService("phone");
       return var1 != null && var1.isVoiceCapable();
    }
@@ -175,7 +175,7 @@ public class Utils {
 
    public static boolean updatePreferenceToSpecificActivityFromMetaDataOrRemove(Context param0, PreferenceGroup param1, String param2) {
       // $FF: Couldn't be decompiled
-   }
+   }*/
 
    public static boolean updatePreferenceToSpecificActivityOrRemove(Context var0, PreferenceGroup var1, String var2, int var3) {
       Preference var4 = var1.findPreference(var2);
