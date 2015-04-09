@@ -149,10 +149,10 @@
         <item name="android:shadowColor">#b0000000</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
-<!--
+
     <style name="Theme.WifiDialog" parent="@android:style/Theme.Dialog.RecentApplications">
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
-    -->
+
     <style name="Theme.AccessibilityTutorialActivity" parent="@android:style/Theme.Holo" />
 </resources>

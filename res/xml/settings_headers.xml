@@ -4,11 +4,12 @@
     <header android:id="@id/apps_manager"
             android:title="@string/apps_title"
             android:fragment="com.general.mediaplayer.csr.AppsManagerSettings" />
-<!--
+
     <header android:id="@id/wifi_settings"
             android:title="@string/wifi_settings_title"
             android:fragment="com.general.mediaplayer.csr.wifi.WifiSettings" />
 
+<!--
     <header android:id="@id/bluetooth_settings"
             android:title="@string/bluetooth_settings_title"
             android:fragment="com.general.mediaplayer.csr.bluetooth.BluetoothSettings" />
