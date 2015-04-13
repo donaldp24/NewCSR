@@ -7,7 +7,11 @@
 
     <header android:id="@id/wifi_settings"
             android:title="@string/wifi_settings_title"
-            android:fragment="com.general.mediaplayer.csr.wifi.WifiSettings" />
+            android:fragment="com.general.mediaplayer.csr.wifi.WifiSettingsFragment" />
+
+    <header android:id="@+id/network_settings"
+            android:title="@string/radio_controls_title"
+            android:fragment="com.general.mediaplayer.csr.NetworkSettings"/>
 
 <!--
     <header android:id="@id/bluetooth_settings"

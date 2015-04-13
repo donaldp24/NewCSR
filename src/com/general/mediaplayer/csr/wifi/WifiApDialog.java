@@ -23,7 +23,7 @@ public class WifiApDialog extends AlertDialog implements OnClickListener, TextWa
    public static final int OPEN_INDEX = 0;
    public static final int WPA2_INDEX = 2;
    public static final int WPA_INDEX = 1;
-   private final OnClickListener mListener;
+   private final android.content.DialogInterface.OnClickListener mListener;
    private EditText mPassword;
    private int mSecurityTypeIndex = 0;
    private TextView mSsid;
@@ -31,7 +31,7 @@ public class WifiApDialog extends AlertDialog implements OnClickListener, TextWa
    WifiConfiguration mWifiConfig;
 
 
-   public WifiApDialog(Context var1, OnClickListener var2, WifiConfiguration var3) {
+   public WifiApDialog(Context var1, android.content.DialogInterface.OnClickListener var2, WifiConfiguration var3) {
       super(var1);
       this.mListener = var2;
       this.mWifiConfig = var3;
@@ -47,9 +47,9 @@ public class WifiApDialog extends AlertDialog implements OnClickListener, TextWa
 
    private void showSecurityFields() {
       if(this.mSecurityTypeIndex == 0) {
-         this.mView.findViewById(R.id.fields).setVisibility(8);
+         this.mView.findViewById(R.id.fields).setVisibility(View.GONE);
       } else {
-         this.mView.findViewById(R.id.fields).setVisibility(0);
+         this.mView.findViewById(R.id.fields).setVisibility(View.VISIBLE);
       }
    }
 
@@ -116,7 +116,7 @@ public class WifiApDialog extends AlertDialog implements OnClickListener, TextWa
       this.setInverseBackgroundForced(true);
       Context var3 = this.getContext();
       this.setTitle(R.string.wifi_tether_configure_ap_text);
-      this.mView.findViewById(R.id.type).setVisibility(0);
+      this.mView.findViewById(R.id.type).setVisibility(View.VISIBLE);
       this.mSsid = (TextView)this.mView.findViewById(R.id.ssid);
       this.mPassword = (EditText)this.mView.findViewById(R.id.password);
       this.setButton(-1, var3.getString(R.string.wifi_save), this.mListener);

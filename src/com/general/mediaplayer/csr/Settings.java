@@ -36,12 +36,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 //import android.view.IWindowManager;
 //import android.view.IWindowManager.Stub;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -1615,7 +1610,8 @@ public class Settings extends PreferenceActivity
                 case HEADER_TYPE_NORMAL:
                     if (header != null && header.iconRes != 0)
                         headerViewHolder.icon.setImageResource(header.iconRes);
-                    headerViewHolder.title.setText(header.getTitle(this.getContext().getResources()));
+                    CharSequence szTitle = header.getTitle(this.getContext().getResources());
+                    headerViewHolder.title.setText(szTitle==null ? "" : szTitle);
                     CharSequence summary = header.getSummary(this.getContext().getResources());
                     if(!TextUtils.isEmpty(summary)) {
                         headerViewHolder.summary.setVisibility(View.VISIBLE);

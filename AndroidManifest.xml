@@ -60,7 +60,7 @@
     <uses-permission android:name="android.permission.SET_POINTER_SPEED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-	<uses-sdk android:minSdkVersion="15"/>
+	<uses-sdk android:minSdkVersion="17"/>
 
 	<application android:theme="@android:style/Theme.Holo" android:label="@string/settings_label" android:icon="@mipmap/ic_launcher_settings" android:taskAffinity="" android:hardwareAccelerated="true" android:uiOptions="splitActionBarWhenNarrow">
         <receiver android:name="com.general.mediaplayer.csr.services.CallAlarm" />

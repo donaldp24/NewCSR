@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_wifi_scan" android:title="@string/wifi_menu_scan" android:showAsAction="always|withText" />
+    <item android:id="@+id/action_wifi_add_network" android:title="@string/wifi_add_network" android:showAsAction="always|withText" />
+    <item android:id="@+id/action_wifi_advanced" android:title="@string/wifi_menu_advanced" />
+</menu>

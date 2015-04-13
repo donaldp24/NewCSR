@@ -15,7 +15,7 @@ class Summary {
       Resources var3 = var0.getResources();
       int var4;
       if(var1 == null) {
-         var4 = R.string.wifi_status;
+         var4 = R.array.wifi_status;
       } else {
          var4 = R.array.wifi_status_with_ssid;
       }
