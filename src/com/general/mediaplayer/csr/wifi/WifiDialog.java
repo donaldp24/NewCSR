@@ -2,8 +2,6 @@ package com.general.mediaplayer.csr.wifi;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface.OnClickListener;
-import android.media.MediaRouter;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.os.Bundle;
@@ -14,12 +12,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.general.mediaplayer.csr.R;
 
-import java.net.InetAddress;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.util.Iterator;
-//import com.general.mediaplayer.csr.wifi.AccessPoint;
-//import com.general.mediaplayer.csr.wifi.WifiConfigController;
 
 class WifiDialog extends AlertDialog {
 
@@ -60,7 +52,11 @@ class WifiDialog extends AlertDialog {
       this.mListener = listener;
       this.mAccessPoint = spot;
 
-      this.mAccessPointSecurity = WifiAdmin.getSecurityLevelFromCap(spot.szCaps);
+       if ( spot != null ) {
+           this.mAccessPointSecurity = spot.getSecurityLevel();
+       } else {
+           this.mAccessPointSecurity = -1;
+       }
    }
 
    public Button getCancelButton() {
@@ -89,10 +85,12 @@ class WifiDialog extends AlertDialog {
       this.setInverseBackgroundForced(true);
       //this.mController = new WifiConfigController(this, this.mView, this.mAccessPoint, this.mEdit);
       initControls();
+
       super.onCreate(var1);
-      //if(this.mAccessPoint != null && this.mAccessPoint.networkId == -1) {
+
+      if(this.mAccessPoint!=null && this.mAccessPoint.getNetworkId()==-1) {
          this.getSubmitButton().setEnabled(false);
-      //}
+      }
 
    }
 
@@ -149,11 +147,11 @@ class WifiDialog extends AlertDialog {
             this.addRow(var8, R.string.wifi_speed, var11.getLinkSpeed() + "Mbps");
          }
 
-         this.addRow(var8, R.string.wifi_security, this.mAccessPoint.getSecurityString(false));
+         this.addRow(var8, R.string.wifi_security, this.mAccessPoint.getSecurityString(getContext(), false));
          int var12 = this.mAccessPoint.getNetworkId();
          boolean var13 = false;
          if(var12 != -1) {
-            WifiConfiguration var14 = this.mAccessPoint.getConfig();
+            WifiConfiguration var14 = this.mAccessPoint.wifiConfig;
             // TODO
             /*if(var14.ipAssignment == IpAssignment.STATIC) {
                this.mIpSettingsSpinner.setSelection(1);
@@ -260,7 +258,7 @@ class WifiDialog extends AlertDialog {
       }
    }
 
-   int chosenNetworkSetupMethod() {
+   public int chosenNetworkSetupMethod() {
       return this.mNetworkSetupSpinner != null?this.mNetworkSetupSpinner.getSelectedItemPosition():0;
    }
 
@@ -512,7 +510,7 @@ class WifiDialog extends AlertDialog {
          int var9 = this.mAccessPoint.getNetworkId();
          var2 = null;
          if(var9 != -1) {
-            var2 = this.mAccessPoint.getConfig();
+            var2 = this.mAccessPoint.wifiConfig;
          }
       }
 
@@ -574,7 +572,7 @@ class WifiDialog extends AlertDialog {
          int var4 = this.mAccessPoint.getNetworkId();
          var2 = null;
          if(var4 != -1) {
-            var2 = this.mAccessPoint.getConfig();
+            var2 = this.mAccessPoint.wifiConfig;
          }
       }
 
@@ -639,4 +637,87 @@ class WifiDialog extends AlertDialog {
       @Override
       public void onNothingSelected(AdapterView<?> adapterView) {}
    };
+
+   public WifiConfiguration getWifiConfiguration() {
+      if ( mAccessPoint.wifiConfig == null ) {
+          mAccessPoint.wifiConfig = new WifiConfiguration();
+
+          // make a WifiConfiguration
+          // stackoverflow:8818290:how-to-connect-to-a-specific-wifi-network-in-android-programmatically
+          mAccessPoint.wifiConfig.SSID = "\"" + mAccessPoint.szSSID + "\"";
+          mAccessPoint.wifiConfig.status = WifiConfiguration.Status.DISABLED;
+          mAccessPoint.wifiConfig.priority = 40;
+
+          switch (mAccessPoint.getSecurityLevel()) {
+              case WifiSpotItem.LEVEL_WEP: {
+                  mAccessPoint.wifiConfig.wepKeys[0] = "\"" + mPasswordView.getText() + "\"";
+                  mAccessPoint.wifiConfig.wepTxKeyIndex = 0;
+                  mAccessPoint.wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                  mAccessPoint.wifiConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+                  mAccessPoint.wifiConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+                  break;
+              }
+
+              case WifiSpotItem.LEVEL_WPA:
+              case WifiSpotItem.LEVEL_WPA2:
+              case WifiSpotItem.LEVEL_WPA_WPA2: {
+                  mAccessPoint.wifiConfig.preSharedKey = "\"" + mPasswordView.getText() + "\"";
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                  mAccessPoint.wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                  //mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                  //mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+                  mAccessPoint.wifiConfig.status = WifiConfiguration.Status.ENABLED;
+                  mAccessPoint.wifiConfig.hiddenSSID = true;
+                  break;
+              }
+
+              case WifiSpotItem.LEVEL_NONE: {
+                  mAccessPoint.wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                  mAccessPoint.wifiConfig.allowedAuthAlgorithms.clear();
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+                  break;
+              }
+
+              case WifiSpotItem.LEVEL_EAP: {
+                  // FIXME - I am not sure this is correct
+                  // same as WPA, except for key management
+                  mAccessPoint.wifiConfig.preSharedKey = "\"" + mPasswordView.getText() + "\"";
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                  mAccessPoint.wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                  mAccessPoint.wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_EAP);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+                  mAccessPoint.wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+                  break;
+              }
+
+              default:
+                  break;
+          }
+      }
+
+      return mAccessPoint.wifiConfig;
+   }
 }

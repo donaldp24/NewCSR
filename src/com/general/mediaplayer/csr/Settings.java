@@ -956,6 +956,27 @@ public class Settings extends PreferenceActivity
 
         this.startCsrManagerService(this);
         Log.v("==", "======settings======onCreate=========");
+
+        Thread.UncaughtExceptionHandler mUEHandler = new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+				/*try {
+					PrintWriter pw = new PrintWriter(new OutputStreamWriter(openFileOutput(Environment.getExternalStorageDirectory() + "/" + "dump.txt", 0)));
+					e.printStackTrace(pw);
+					pw.flush();
+					pw.close();
+				} catch (FileNotFoundException e1) {
+					// do nothing
+				}*/
+
+                //SelectRoomActivity.this.finish();
+                Log.e("XXX", "Caught UncaughtExceptionHandler.");
+                e.printStackTrace();
+            }
+        };
+
+        Thread.setDefaultUncaughtExceptionHandler(mUEHandler);
     }
 
     @Override

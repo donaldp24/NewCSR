@@ -1,6 +1,8 @@
 package com.general.mediaplayer.csr.wifi;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -94,29 +96,6 @@ public class WifiAdmin {
     public void StartScan()
     {
         mWifiManager.startScan();
-        //得到扫描结果
-        mWifiList = mWifiManager.getScanResults();
-        if ( mWifiSpotList == null ) {
-            mWifiSpotList = new ArrayList<WifiSpotItem>();
-        } else {
-            mWifiSpotList.clear();
-        }
-        for ( int i=0; i<mWifiList.size(); i++ ) {
-            WifiSpotItem newspot = new WifiSpotItem(mWifiList.get(i));
-
-            newspot.nSignalLevel = mWifiManager.calculateSignalLevel(newspot.nLevel, 4);
-            if ( String.format("\"%s\"",newspot.szSSID).equals(mWifiInfo.getSSID()) ) {
-                newspot.wifiInfo = mWifiInfo;
-            } else {
-                newspot.wifiInfo = null;
-            }
-            newspot.detailedState = null; // TODO
-            newspot.szSecurityString = getHumanReadableSecurity(getSecurityFromCap(newspot.szCaps), m_ctx);
-
-            mWifiSpotList.add(newspot);
-        }
-        //得到配置好的网络连接
-        mWifiConfiguration = mWifiManager.getConfiguredNetworks();
     }
     //得到网络列表
     public List<ScanResult> GetWifiList()
@@ -125,6 +104,61 @@ public class WifiAdmin {
     }
     public List<WifiSpotItem> GetWifiSpotList()
     {
+        //得到扫描结果
+        mWifiList = mWifiManager.getScanResults();
+        if ( mWifiSpotList == null ) {
+            mWifiSpotList = new ArrayList<WifiSpotItem>();
+        } else {
+            mWifiSpotList.clear();
+        }
+
+        //得到配置好的网络连接
+        mWifiConfiguration = mWifiManager.getConfiguredNetworks();
+
+        // Get active wifi spot info
+        String szActiveSSID;
+        NetworkInfo.DetailedState detailedState;
+        {
+            ConnectivityManager connMgr = (ConnectivityManager) m_ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfoWifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            detailedState = netInfoWifi.getDetailedState();
+            szActiveSSID = netInfoWifi.getExtraInfo();
+        }
+
+        for ( int i=0; i<mWifiList.size(); i++ ) {
+            WifiSpotItem newspot = new WifiSpotItem(mWifiList.get(i));
+
+            newspot.nSignalLevel = mWifiManager.calculateSignalLevel(newspot.nLevel, 4);
+            if ( newspot.szBSSID.equals(mWifiInfo.getBSSID()) ) {
+                newspot.wifiInfo = mWifiInfo;
+                //newspot.detailedState = WifiInfo.getDetailedStateOf(mWifiInfo.getSupplicantState());
+            } else {
+                newspot.wifiInfo = null;
+                //newspot.detailedState = null;
+            }
+
+            if ( String.format("\"%s\"", newspot.szSSID).equals(szActiveSSID) ) {
+                newspot.detailedState = detailedState;
+            }else {
+                newspot.detailedState = null;
+            }
+
+            newspot.wifiConfig = null;
+            for ( int j=0; j<mWifiConfiguration.size(); j++ ) {
+                WifiConfiguration config = mWifiConfiguration.get(j);
+
+                if ( config.SSID!=null && newspot.szSSID!=null &&
+                        config.SSID.equals(String.format("\"%s\"",newspot.szSSID)) ) {
+                    newspot.wifiConfig = config;
+                    break;
+                }
+            }
+
+            //FIXME newspot.szSecurityString = getHumanReadableSecurity(getSecurityFromCap(newspot.szCaps), m_ctx);
+
+            mWifiSpotList.add(newspot);
+        }
+
         return mWifiSpotList;
     }
     //查看扫描结果
@@ -177,73 +211,5 @@ public class WifiAdmin {
     {
         mWifiManager.disableNetwork(netId);
         mWifiManager.disconnect();
-    }
-
-    // https://code.google.com/p/pdn-slatedroid/source/browse/trunk/eclair/packages/apps/Settings/src/com/android/settings/wifi/AccessPointState.java?r=51#318
-    // Constants used for different security types
-    public static final String NONE = "None";
-    public static final String WEP = "WEP";
-    public static final String WPA = "WPA";
-    public static final String WPA2 = "WPA2";
-    public static final String WPA_WPA2 = "WPA/WPA2";
-    public static final String EAP = "EAP";
-
-    // getScanResultSecurity
-    public static String getSecurityFromCap(String i_szCap) {
-        if ( i_szCap.contains(EAP) ) {
-            return EAP;
-        } else if ( i_szCap.contains(WEP) ) {
-            return WEP;
-        } else if ( i_szCap.contains(WPA) ) {
-            if ( i_szCap.contains(WPA2) ) {
-                return WPA_WPA2;
-            } else {
-                return WPA;
-            }
-        } else if ( i_szCap.contains(WPA2) ) {
-            return WPA2;
-        }
-
-        return NONE;
-    }
-
-    public static final int LEVEL_NONE = 0;
-    public static final int LEVEL_WEP = 2;
-    public static final int LEVEL_WPA = 3;
-    public static final int LEVEL_WPA2 = 4;
-    public static final int LEVEL_WPA_WPA2 = 5;
-    public static final int LEVEL_EAP = 1;
-    public static int getSecurityLevelFromCap(String i_szCap) {
-        if ( i_szCap.contains(EAP) ) {
-            return LEVEL_EAP;
-        } else if ( i_szCap.contains(WEP) ) {
-            return LEVEL_WEP;
-        } else if ( i_szCap.contains(WPA) ) {
-            if ( i_szCap.contains(WPA2) ) {
-                return LEVEL_WPA_WPA2;
-            } else {
-                return LEVEL_WPA;
-            }
-        } else if ( i_szCap.contains(WPA2) ) {
-            return LEVEL_WPA2;
-        }
-
-        return LEVEL_NONE;
-    }
-
-    public static String getHumanReadableSecurity(String i_szSecurity, Context i_ctx) {
-        if ( i_szSecurity.equals(EAP) ) {
-            return i_ctx.getString(R.string.wifi_security_eap);
-        } else if ( i_szSecurity.equals(WEP) ) {
-            return i_ctx.getString(R.string.wifi_security_wep);
-        } else if ( i_szSecurity.equals(WPA) ) {
-            return i_ctx.getString(R.string.wifi_security_wpa);
-        } else if ( i_szSecurity.equals(WPA2) ) {
-            return i_ctx.getString(R.string.wifi_security_wpa2);
-        } else if ( i_szSecurity.equals(WPA_WPA2) ) {
-            return i_ctx.getString(R.string.wifi_security_wpa_wpa2);
-        }
-
-        return "";
     }
 }
