@@ -177,12 +177,21 @@ public class WifiSettingsFragment extends ListFragment {
                @Override
                public void onClick(DialogInterface dialogInterface, int i) {
                   switch (i) {
-                     case DialogInterface.BUTTON_POSITIVE:
-                        i = 1;
-                        break;
+                     case DialogInterface.BUTTON_POSITIVE: {
+                         WifiDialog wifiDialog = (WifiDialog) dialogInterface;
+                         WifiConfiguration wcf = wifiDialog.getWifiConfiguration();
+
+                         int netId = m_wifiAdmin.mWifiManager.addNetwork(wcf);
+                         if (netId != -1) {
+                             m_wifiAdmin.mWifiManager.saveConfiguration();
+                         }
+
+                         m_wifiAdmin.StartScan();
+
+                         break;
+                     }
+
                      case DialogInterface.BUTTON_NEGATIVE:
-                        i = 2;
-                        break;
                      default:
                         break;
                   }
