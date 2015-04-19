@@ -131,32 +131,44 @@ public class WifiAdmin {
             newspot.nSignalLevel = mWifiManager.calculateSignalLevel(newspot.nLevel, 4);
             if ( newspot.szBSSID.equals(mWifiInfo.getBSSID()) ) {
                 newspot.wifiInfo = mWifiInfo;
-                //newspot.detailedState = WifiInfo.getDetailedStateOf(mWifiInfo.getSupplicantState());
             } else {
                 newspot.wifiInfo = null;
-                //newspot.detailedState = null;
             }
 
             if ( String.format("\"%s\"", newspot.szSSID).equals(szActiveSSID) ) {
+                //newspot.detailedState = WifiInfo.getDetailedStateOf(mWifiInfo.getSupplicantState());
                 newspot.detailedState = detailedState;
             }else {
                 newspot.detailedState = null;
             }
 
-            newspot.wifiConfig = null;
-            for ( int j=0; j<mWifiConfiguration.size(); j++ ) {
-                WifiConfiguration config = mWifiConfiguration.get(j);
+            newspot.wifiConfig = null; // will be determined in next block
 
-                if ( config.SSID!=null && newspot.szSSID!=null &&
-                        config.SSID.equals(String.format("\"%s\"",newspot.szSSID)) ) {
-                    newspot.wifiConfig = config;
+            mWifiSpotList.add(newspot);
+        }
+
+        // Set WifiConfiguration of access point.
+        for (int j = 0; j < mWifiConfiguration.size(); j++) {
+            WifiConfiguration config = mWifiConfiguration.get(j);
+
+            int k;
+            int nScannedSpotCount = mWifiSpotList.size();
+            for ( k=0; k<nScannedSpotCount; k++ ) {
+                WifiSpotItem spot = mWifiSpotList.get(k);
+
+                if (config.SSID != null && spot.szSSID != null &&
+                        config.SSID.equals(String.format("\"%s\"", spot.szSSID))) {
+                    spot.wifiConfig = config;
                     break;
                 }
             }
 
-            //FIXME newspot.szSecurityString = getHumanReadableSecurity(getSecurityFromCap(newspot.szCaps), m_ctx);
+            if ( k == nScannedSpotCount ) { // if there is no matched spot with this config,
+                // this is the spot not in range.
+                WifiSpotItem newspot = new WifiSpotItem(config);
 
-            mWifiSpotList.add(newspot);
+                mWifiSpotList.add(newspot);
+            }
         }
 
         return mWifiSpotList;

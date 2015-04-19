@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.*;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -259,6 +261,8 @@ public class WifiSettingsFragment extends ListFragment {
                    WifiConfiguration wcf = wifiDialog.getWifiConfiguration();
 
                    m_wifiAdmin.mWifiManager.removeNetwork(wcf.networkId);
+
+                   m_wifiAdmin.StartScan();
                    break;
                }
 
@@ -294,14 +298,19 @@ public class WifiSettingsFragment extends ListFragment {
          //lblCap.setText(String.format("Secured with %s", szSecurity));
 
          ImageView imgStatus = (ImageView) convertView.findViewById(R.id.imgStatus);
-         imgStatus.setImageLevel(itemData.nSignalLevel);
+          if ( itemData.nSignalLevel == -1 ) {
+              imgStatus.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+          } else {
+              imgStatus.setImageResource(R.drawable.wifi_signal);
+              imgStatus.setImageLevel(itemData.nSignalLevel);
 
-          int szSecurity = itemData.getSecurityLevel();
-         if ( szSecurity == WifiSpotItem.LEVEL_NONE ) {
-            imgStatus.setImageState(STATE_SECURED, false);
-         } else {
-            imgStatus.setImageState(STATE_SECURED, true);
-         }
+              int szSecurity = itemData.getSecurityLevel();
+              if (szSecurity == WifiSpotItem.LEVEL_NONE) {
+                  imgStatus.setImageState(STATE_SECURED, false);
+              } else {
+                  imgStatus.setImageState(STATE_SECURED, true);
+              }
+          }
 
          return convertView;
       }

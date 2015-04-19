@@ -1,6 +1,7 @@
 package com.general.mediaplayer.csr.wifi;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -22,15 +23,17 @@ public class WifiSpotItem {
     public NetworkInfo.DetailedState detailedState;
     public WifiConfiguration wifiConfig;
     public WifiInfo wifiInfo;
-    //public String szSecurityString;
 
-    public WifiSpotItem ( String i_szSSID, String i_szBSSID, String i_szCaps, int i_nLevel, int i_nFrequency, int i_nTimestamp ) {
-        this.szSSID = i_szSSID;
-        this.szBSSID = i_szBSSID;
-        this.szCaps = i_szCaps;
-        this.nLevel = i_nLevel;
-        this.nFrequency = i_nFrequency;
-        this.nTimestamp = i_nTimestamp;
+    // Will be used when adding 'Not in range' spot.
+    public WifiSpotItem ( WifiConfiguration i_wifiConfig ) {
+        this.szSSID = i_wifiConfig.SSID.replaceAll("\"", "");
+        if ( i_wifiConfig.BSSID != null ) {
+            this.szBSSID = i_wifiConfig.BSSID.replaceAll("\"", "");
+        }
+        this.nLevel = Integer.MAX_VALUE;
+        this.nSignalLevel = -1;
+
+        this.wifiConfig = i_wifiConfig;
     }
 
     public WifiSpotItem ( ScanResult i_scanResult ) {
@@ -45,15 +48,6 @@ public class WifiSpotItem {
     public NetworkInfo.DetailedState getState() {
         return detailedState;
     }
-
-    /*public WifiConfiguration getConfig() {
-        return wifiConfig;
-    }*/
-
-    // TODO
-    /*public String getSecurityString(boolean b) {
-        return szSecurityString;
-    }*/
 
     public int getSignalLevel() {
         return nSignalLevel;
@@ -82,25 +76,35 @@ public class WifiSpotItem {
         return false;
     }
 
-    /*static int getSecurity(WifiConfiguration var0) {
-        byte var1 = 1;
+    static int getSecurityLevelFromConfig(WifiConfiguration config) {
+        byte var1 = LEVEL_WEP;
 
-        if ( var0 != null ) { // FIXME
-            if (var0.allowedKeyManagement.get(var1)) {
-                var1 = 2;
+        if ( config != null ) {
+            if (config.allowedKeyManagement.get(WifiConfiguration.KeyMgmt.WPA_PSK)) {
+                if ( config.allowedGroupCiphers.get(WifiConfiguration.GroupCipher.CCMP) ) {
+                    var1 = LEVEL_WPA2;
+
+                    if ( config.allowedGroupCiphers.get(WifiConfiguration.GroupCipher.TKIP) ) {
+                        var1 = LEVEL_WPA_WPA2;
+                    }
+                } else {
+                    var1 = LEVEL_WPA;
+                }
             } else {
-                if (var0.allowedKeyManagement.get(2) || var0.allowedKeyManagement.get(3)) {
-                    return 3;
+                if (config.allowedKeyManagement.get(WifiConfiguration.KeyMgmt.WPA_EAP) || config.allowedKeyManagement.get(WifiConfiguration.KeyMgmt.IEEE8021X)) {
+                    return LEVEL_EAP;
                 }
 
-                if (var0.wepKeys[0] == null) {
-                    return 0;
+                if (config.wepKeys[0] == null) {
+                    return LEVEL_NONE;
                 }
             }
+        } else {
+            return -1;
         }
 
         return var1;
-    }*/
+    }
 
     /*public String getSecurityString(Context i_ctx, boolean var1) {
         switch(getSecurity(this.wifiConfig)) {
@@ -269,6 +273,14 @@ public class WifiSpotItem {
     public static final int LEVEL_WPA_WPA2 = 5;
     public static final int LEVEL_EAP = 1;
     public int getSecurityLevel() {
+        if ( szCaps == null ) {
+            if ( wifiConfig != null ) {
+                return getSecurityLevelFromConfig(wifiConfig);
+            }
+
+            return -1;
+        }
+
         if ( szCaps.contains(EAP) ) {
             return LEVEL_EAP;
         } else if ( szCaps.contains(WEP) ) {
