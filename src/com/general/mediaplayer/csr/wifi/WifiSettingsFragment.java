@@ -25,42 +25,15 @@ public class WifiSettingsFragment extends ListFragment {
     private BroadcastReceiver m_networkChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /*int extraWifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-            int a = intent.getIntExtra(WifiManager.EXTRA_PREVIOUS_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-            int b = intent.getIntExtra(WifiManager.EXTRA_NEW_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-            boolean c = intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false);
-            int i = 0;
+            String action = intent.getAction();
+            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action)) {
+                int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+                if ( state != WifiManager.WIFI_STATE_ENABLED ) {
+                    switchToEmptyFragment();
 
-            NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-
-            String szAction = intent.getAction();
-            if ( szAction.equals(WifiManager.WIFI_STATE_CHANGED_ACTION) ) {
-                if ( info != null ) {
-                    NetworkInfo.DetailedState wifiState = info.getDetailedState();
+                    return;
                 }
             }
-
-            switch ( extraWifiState ) {
-                case WifiManager.WIFI_STATE_DISABLED: {
-                    break;
-                }
-
-                case WifiManager.WIFI_STATE_DISABLING: {
-                    break;
-                }
-
-                case WifiManager.WIFI_STATE_ENABLED: {
-                    break;
-                }
-
-                case WifiManager.WIFI_STATE_ENABLING: {
-                    break;
-                }
-
-                case WifiManager.WIFI_STATE_UNKNOWN: {
-                    break;
-                }
-            }*/
 
             getActivity().runOnUiThread( new Runnable() {
                 @Override
@@ -76,6 +49,7 @@ public class WifiSettingsFragment extends ListFragment {
         IntentFilter filter = new IntentFilter();
 
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 
         getActivity().registerReceiver(m_networkChangedReceiver, filter);
     }
@@ -368,29 +342,11 @@ public class WifiSettingsFragment extends ListFragment {
          m_wifiSpotItemAdapter.notifyDataSetChanged();
       }
    }
+
+    private void switchToEmptyFragment () {
+        WifiSettingsEmptyFragment fragEmpty = new WifiSettingsEmptyFragment();
+        PreferenceActivity parentActivity = (PreferenceActivity) getActivity();
+
+        parentActivity.startPreferenceFragment(fragEmpty, false);
+    }
 }
-
-   /*private WiFiListAdapter mNearbyWiFiListAdapter = null;
-   private List<WifiClusterItem> mWifiClusterItems = null;
-
-   public void onListItemClick(ListView paramListView, View paramView, int paramInt, long paramLong)
-   {
-      super.onListItemClick(paramListView, paramView, paramInt, paramLong);
-      WifiModel localWifiModel = (WifiModel)paramView.getTag();
-      Intent localIntent = new Intent(getActivity(), WifiDetailActivity.class);
-      localIntent.putExtra("mac_address", localWifiModel.getMacAddress());
-      startActivity(localIntent);
-   }
-
-   public void onViewCreated(View paramView, Bundle paramBundle)
-   {
-      super.onViewCreated(paramView, paramBundle);
-      getListView().setBackgroundColor(Color.DKGRAY); //getResources().getColor(2131230729)
-      this.mNearbyWiFiListAdapter = new WiFiListAdapter(getActivity(), this.mWifiClusterItems);
-      setListAdapter(this.mNearbyWiFiListAdapter);
-   }
-
-   public void setData(List<WifiClusterItem> paramList) {
-      this.mWifiClusterItems = paramList;
-   }*/
-
