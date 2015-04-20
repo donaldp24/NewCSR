@@ -148,26 +148,28 @@ public class WifiAdmin {
         }
 
         // Set WifiConfiguration of access point.
-        for (int j = 0; j < mWifiConfiguration.size(); j++) {
-            WifiConfiguration config = mWifiConfiguration.get(j);
+        if ( mWifiConfiguration != null ) {
+            for (int j = 0; j < mWifiConfiguration.size(); j++) {
+                WifiConfiguration config = mWifiConfiguration.get(j);
 
-            int k;
-            int nScannedSpotCount = mWifiSpotList.size();
-            for ( k=0; k<nScannedSpotCount; k++ ) {
-                WifiSpotItem spot = mWifiSpotList.get(k);
+                int k;
+                int nScannedSpotCount = mWifiSpotList.size();
+                for (k = 0; k < nScannedSpotCount; k++) {
+                    WifiSpotItem spot = mWifiSpotList.get(k);
 
-                if (config.SSID != null && spot.szSSID != null &&
-                        config.SSID.equals(String.format("\"%s\"", spot.szSSID))) {
-                    spot.wifiConfig = config;
-                    break;
+                    if (config.SSID != null && spot.szSSID != null &&
+                            config.SSID.equals(String.format("\"%s\"", spot.szSSID))) {
+                        spot.wifiConfig = config;
+                        break;
+                    }
                 }
-            }
 
-            if ( k == nScannedSpotCount ) { // if there is no matched spot with this config,
-                // this is the spot not in range.
-                WifiSpotItem newspot = new WifiSpotItem(config);
+                if (k == nScannedSpotCount) { // if there is no matched spot with this config,
+                    // this is the spot not in range.
+                    WifiSpotItem newspot = new WifiSpotItem(config);
 
-                mWifiSpotList.add(newspot);
+                    mWifiSpotList.add(newspot);
+                }
             }
         }
 

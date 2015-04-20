@@ -51,15 +51,11 @@ import android.widget.Toast;
 //import com.general.mediaplayer.csr.fuelgauge.PowerUsageSummary;
 //import com.general.mediaplayer.csr.services.CsrManagerService;
 //import com.general.mediaplayer.csr.wifi.WifiEnabler;
+import com.general.mediaplayer.csr.wifi.WifiEnabler;
 import com.hklt.hidusb.Hidusb;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Settings extends PreferenceActivity
         implements ButtonBarHandler
@@ -1554,13 +1550,13 @@ public class Settings extends PreferenceActivity
         static final int HEADER_TYPE_SWITCH = 2;
         //private final BluetoothEnabler mBluetoothEnabler;
         private LayoutInflater mInflater;
-        //private final WifiEnabler mWifiEnabler;
+        private final WifiEnabler mWifiEnabler;
 
         public HeaderAdapter(Context paramContext, List<PreferenceActivity.Header> paramList)
         {
             super(paramContext, 0, paramList);
             this.mInflater = ((LayoutInflater)paramContext.getSystemService("layout_inflater"));
-            //this.mWifiEnabler = new WifiEnabler(paramContext, new Switch(paramContext));
+            this.mWifiEnabler = new WifiEnabler(paramContext, new Switch(paramContext));
             //this.mBluetoothEnabler = new BluetoothEnabler(paramContext, new Switch(paramContext));
         }
 
@@ -1596,7 +1592,7 @@ public class Settings extends PreferenceActivity
                     case HEADER_TYPE_CATEGORY:
                         view = new TextView(this.getContext(), (AttributeSet)null, android.R.attr.listSeparatorTextViewStyle);
                         headerViewHolder.title = (TextView)view;
-                        ((View)view).setVisibility(8);
+                        ((View)view).setVisibility(View.GONE);
                         break;
                     case HEADER_TYPE_NORMAL:
                         view = this.mInflater.inflate(R.layout.preference_header_item, paramViewGroup, false);
@@ -1624,7 +1620,7 @@ public class Settings extends PreferenceActivity
                     return view;
                 case HEADER_TYPE_SWITCH:
                     if(header.id == R.id.wifi_settings) {
-                        //this.mWifiEnabler.setSwitch(var6.switch_);
+                        this.mWifiEnabler.setSwitch(headerViewHolder.switch_);
                     } else {
                         //this.mBluetoothEnabler.setSwitch(var6.switch_);
                     }
@@ -1664,13 +1660,13 @@ public class Settings extends PreferenceActivity
 
         public void pause()
         {
-            //this.mWifiEnabler.pause();
+            this.mWifiEnabler.pause();
             //this.mBluetoothEnabler.pause();
         }
 
         public void resume()
         {
-            //this.mWifiEnabler.resume();
+            this.mWifiEnabler.resume();
             //this.mBluetoothEnabler.resume();
         }
 
