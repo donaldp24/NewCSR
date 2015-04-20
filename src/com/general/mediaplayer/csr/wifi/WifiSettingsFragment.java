@@ -12,12 +12,14 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.general.mediaplayer.csr.R;
+import com.general.mediaplayer.csr.Settings;
 
 import java.util.List;
 
@@ -172,37 +174,45 @@ public class WifiSettingsFragment extends ListFragment {
              m_wifiAdmin.StartScan();
             break;
 
-         case R.id.action_wifi_add_network:
-            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialogInterface, int i) {
-                  switch (i) {
-                     case DialogInterface.BUTTON_POSITIVE: {
-                         WifiDialog wifiDialog = (WifiDialog) dialogInterface;
-                         WifiConfiguration wcf = wifiDialog.getWifiConfiguration();
+         case R.id.action_wifi_add_network: {
+             DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                 @Override
+                 public void onClick(DialogInterface dialogInterface, int i) {
+                     switch (i) {
+                         case DialogInterface.BUTTON_POSITIVE: {
+                             WifiDialog wifiDialog = (WifiDialog) dialogInterface;
+                             WifiConfiguration wcf = wifiDialog.getWifiConfiguration();
 
-                         int netId = m_wifiAdmin.mWifiManager.addNetwork(wcf);
-                         if (netId != -1) {
-                             m_wifiAdmin.mWifiManager.saveConfiguration();
+                             int netId = m_wifiAdmin.mWifiManager.addNetwork(wcf);
+                             if (netId != -1) {
+                                 m_wifiAdmin.mWifiManager.saveConfiguration();
+                             }
+
+                             m_wifiAdmin.StartScan();
+
+                             break;
                          }
 
-                         m_wifiAdmin.StartScan();
-
-                         break;
+                         case DialogInterface.BUTTON_NEGATIVE:
+                         default:
+                             break;
                      }
+                 }
+             };
 
-                     case DialogInterface.BUTTON_NEGATIVE:
-                     default:
-                        break;
-                  }
-               }
-            };
-            WifiDialog dialog = new WifiDialog(getActivity(), onClickListener, null, false);
-            dialog.show();
-            break;
+             WifiDialog dialog = new WifiDialog(getActivity(), onClickListener, null, false);
+             dialog.show();
 
-         case R.id.action_wifi_advanced:
-            break;
+             break;
+         }
+
+         case R.id.action_wifi_advanced: {
+             WifiSettingsAdvancedFragment fragAdv = new WifiSettingsAdvancedFragment();
+             PreferenceActivity parentActivity = (PreferenceActivity) getActivity();
+
+             parentActivity.startPreferenceFragment(fragAdv, true);
+             break;
+         }
       }
 
       return true;

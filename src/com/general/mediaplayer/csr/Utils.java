@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 //import android.net.LinkProperties;
+import android.net.wifi.WifiManager;
 import android.preference.Preference;
 //import android.preference.PreferenceFrameLayout;
 import android.preference.PreferenceGroup;
@@ -17,7 +18,11 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +44,7 @@ public class Utils {
       }
    }
 
-   /*21 private static String formatIpAddresses(LinkProperties var0) {
+   /*private static String formatIpAddresses(LinkProperties var0) {
       String var1 = null;
       if(var0 != null) {
          Iterator var2 = var0.getAddresses().iterator();
@@ -122,7 +127,8 @@ public class Utils {
    }
 
    public static String getWifiIpAddresses(Context var0) {
-      return formatIpAddresses(((ConnectivityManager)var0.getSystemService("connectivity")).getLinkProperties(1));
+       // API level 21
+      return formatIpAddresses(((ConnectivityManager)var0.getSystemService(Context.CONNECTIVITY_SERVICE)).getLinkProperties(1));
    }*/
 
    public static boolean isMonkeyRunning() {
@@ -132,10 +138,10 @@ public class Utils {
    /*21 public static boolean isVoiceCapable(Context var0) {
       TelephonyManager var1 = (TelephonyManager)var0.getSystemService("phone");
       return var1 != null && var1.isVoiceCapable();
-   }
+   }*/
 
    public static boolean isWifiOnly(Context var0) {
-      boolean var1 = ((ConnectivityManager)var0.getSystemService("connectivity")).isNetworkSupported(0);
+      boolean var1 = ((ConnectivityManager)var0.getSystemService(Context.CONNECTIVITY_SERVICE)).isActiveNetworkMetered(); //FIXME.isNetworkSupported(0);
       boolean var2 = false;
       if(!var1) {
          var2 = true;
@@ -144,7 +150,7 @@ public class Utils {
       return var2;
    }
 
-   public static void prepareCustomPreferencesList(ViewGroup var0, View var1, ListView var2, boolean var3) {
+   /*public static void prepareCustomPreferencesList(ViewGroup var0, View var1, ListView var2, boolean var3) {
       boolean var4;
       if(var2.getScrollBarStyle() == 33554432) {
          var4 = true;
