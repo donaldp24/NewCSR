@@ -67,13 +67,11 @@ public class WifiSpotItem {
 
     public boolean getWpsAvailable() {
         int nSecurityLevel = getSecurityLevel();
-        if ( nSecurityLevel==LEVEL_WPA ||
-                nSecurityLevel==LEVEL_WPA2 ||
-                nSecurityLevel==LEVEL_WPA_WPA2 ) {
+        if(nSecurityLevel != LEVEL_EAP && szCaps.contains("WPS")) {
             return true;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     static int getSecurityLevelFromConfig(WifiConfiguration config) {
