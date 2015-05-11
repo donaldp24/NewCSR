@@ -26,7 +26,7 @@ import java.util.Iterator;
 
 public class CsrManagerService extends Service {
 
-   private static final String DIR_SUPER_MANAGER_KEY = "/mnt/usbhost1/AdministratorPassword";
+   private static final String DIR_SUPER_MANAGER_KEY = "/mnt/external_sd/AdministratorPassword";
    private static final String IN_SUPER_MODE_KEY = "inSuperModeKey";
    private static final int MSG_BASE = 10000;
    private static final int MSG_TIMER = 10001;

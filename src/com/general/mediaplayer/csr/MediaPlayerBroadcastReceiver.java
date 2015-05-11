@@ -20,7 +20,7 @@ import java.util.List;
 public class MediaPlayerBroadcastReceiver extends BroadcastReceiver {
 
    static final String ACTION = "android.intent.action.BOOT_COMPLETED";
-   private static final String DIR_SUPER_MANAGER_KEY = "/mnt/usbhost1/AdministratorPassword";
+   private static final String DIR_SUPER_MANAGER_KEY = "/mnt/external_sd/AdministratorPassword";
    private static final String MEDIAPLAYER_START_ACTIVITY = ".ScanMediaActivity";
    private static final int MSG_BASE = 100;
    private static final int MSG_START_APP = 101;
@@ -40,7 +40,7 @@ public class MediaPlayerBroadcastReceiver extends BroadcastReceiver {
 
 
    private boolean checkSuperManagerKey() {
-      File var1 = new File("/mnt/usbhost1/AdministratorPassword");
+      File var1 = new File(DIR_SUPER_MANAGER_KEY);
       boolean var2 = var1.exists();
       boolean var3 = false;
       if(var2) {

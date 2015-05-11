@@ -21,7 +21,7 @@ import java.io.File;
 
 public class AppsInstallFragement extends Fragment {
 
-   public static final String EXTERN_SD_FILES_PATH = "/mnt/extsd/ApkFiles";
+   public static final String EXTERN_SD_FILES_PATH = "/mnt/external_sd/ApkFiles";
    public static final String FILES_PATH = "\\ApkFiles\\";
    public static final String USB_FILES_PATH = "/mnt/usbhost1/ApkFiles";
    private ApkFileAdapter mApkFileAdapter;
@@ -40,9 +40,9 @@ public class AppsInstallFragement extends Fragment {
       this.mApkFileListView = (ListView)this.mContentView.findViewById(R.id.app_install_file_listview);
       this.mApkFileAdapter = new ApkFileAdapter(this.getActivity());
       if(this.mIsSwitchUsb) {
-         this.mFilesPath = "/mnt/usbhost1/ApkFiles";
+         this.mFilesPath = USB_FILES_PATH;
       } else {
-         this.mFilesPath = "/mnt/extsd/ApkFiles";
+         this.mFilesPath = EXTERN_SD_FILES_PATH;
       }
 
       this.mApkFileAdapter.scanApkFiles(this.mFilesPath);
@@ -57,7 +57,7 @@ public class AppsInstallFragement extends Fragment {
       this.mExternSdButton = (Button)this.mContentView.findViewById(R.id.app_install_extern_sd_btn);
       this.mExternSdButton.setOnClickListener(new OnClickListener() {
          public void onClick(View var1) {
-            AppsInstallFragement.this.mFilesPath = "/mnt/extsd/ApkFiles";
+            AppsInstallFragement.this.mFilesPath = EXTERN_SD_FILES_PATH;
             AppsInstallFragement.this.mApkFileAdapter.scanApkFiles(AppsInstallFragement.this.mFilesPath);
             AppsInstallFragement.this.mIsSwitchUsb = false;
             AppsInstallFragement.this.updateFilesPath();
@@ -66,7 +66,7 @@ public class AppsInstallFragement extends Fragment {
       this.mUsbButton = (Button)this.mContentView.findViewById(R.id.app_install_usb_btn);
       this.mUsbButton.setOnClickListener(new OnClickListener() {
          public void onClick(View var1) {
-            AppsInstallFragement.this.mFilesPath = "/mnt/usbhost1/ApkFiles";
+            AppsInstallFragement.this.mFilesPath = USB_FILES_PATH;
             AppsInstallFragement.this.mApkFileAdapter.scanApkFiles(AppsInstallFragement.this.mFilesPath);
             AppsInstallFragement.this.mIsSwitchUsb = true;
             AppsInstallFragement.this.updateFilesPath();

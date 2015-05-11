@@ -60,7 +60,7 @@ import java.util.*;
 public class Settings extends PreferenceActivity
         implements ButtonBarHandler
 {
-    private static final String DIR_SUPER_MANAGER_KEY = "/mnt/usbhost1/AdministratorPassword";
+    private static final String DIR_SUPER_MANAGER_KEY = "/mnt/external_sd/AdministratorPassword";
     private static final String EXTRA_CLEAR_UI_OPTIONS = "settings:remove_ui_options";
     private static final String IN_SUPER_MODE_KEY = "inSuperModeKey";
     private static final String LOG_TAG = "Settings";
@@ -255,7 +255,7 @@ public class Settings extends PreferenceActivity
 
     private boolean checkSuperManagerKey()
     {
-        File localFile = new File("/mnt/usbhost1/AdministratorPassword");
+        File localFile = new File(DIR_SUPER_MANAGER_KEY);
         if (localFile.exists() && localFile.isDirectory())
             return true;
         return false;
